@@ -1,0 +1,114 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs for the same ref, but never interrupt a push to main.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test (with coverage)
+        run: yarn test:coverage
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: coverage-${{ github.run_id }}
+          path: ./coverage
+          if-no-files-found: ignore
+          retention-days: 7
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint-and-test]
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build
+        run: yarn build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: build-${{ github.run_id }}
+          path: |
+            ./build
+            ./package.json
+            ./yarn.lock
+          if-no-files-found: error
+          retention-days: 7
+
+  validate-container:
+    name: Validate Container
+    runs-on: ubuntu-latest
+    needs: [build]
+    timeout-minutes: 15 # cold builds run yarn install twice (build + prod-deps stages)
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      - name: Build image
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: app:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Validate image size
+        uses: wemake-services/docker-image-size-limit@a4d968b01ec931e8dcb14eacbf7a1293ea0b5de2 # 2.2.0
+        with:
+          image: app:ci
+          show_current_size: true
+          size: 400MB
+
+      - name: Smoke test /health
+        run: |
+          docker run -d --name app -p 3001:3001 app:ci
+          for attempt in $(seq 1 15); do
+            if curl -fsS http://localhost:3001/health > /dev/null; then
+              echo "Health check passed on attempt ${attempt}."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Health check never succeeded. Container logs:"
+          docker logs app
+          exit 1
+
+      - name: Tear down container
+        if: always()
+        run: docker rm -f app || true

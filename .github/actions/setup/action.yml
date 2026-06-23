@@ -1,0 +1,27 @@
+name: Setup
+description: Set up Node.js, restore the yarn cache, and install dependencies.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+      with:
+        node-version-file: .nvmrc
+        cache: yarn
+
+    # node_modules is cached directly so cache hits skip the install/link step
+    # entirely. Keyed on the lockfile and .nvmrc; check-latest is intentionally
+    # off so the resolved Node patch can't drift out from under cached native
+    # deps (e.g. @swc/core) built against a specific ABI.
+    - name: Restore node_modules
+      id: node-modules
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-modules-${{ hashFiles('.nvmrc', 'yarn.lock') }}
+
+    - name: Install dependencies
+      if: steps.node-modules.outputs.cache-hit != 'true'
+      shell: bash
+      run: yarn install --frozen-lockfile
