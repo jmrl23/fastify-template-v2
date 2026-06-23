@@ -3,7 +3,8 @@
   "enabledPlugins": {
     "setupdotclaude@dotclaude": true,
     "code-review@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true
+    "code-simplifier@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true
   },
   "permissions": {
     "allow": [
