@@ -16,6 +16,8 @@
     "format": "prettier --write \"./src/**/*.ts\""
   },
   "devDependencies": {
+    "@fastify/swagger": "^9.7.0",
+    "@scalar/fastify-api-reference": "^1.61.0",
     "@swc/core": "^1.15.43",
     "@swc/jest": "^0.2.39",
     "@tsconfig/bases": "^1.0.25",
@@ -36,8 +38,6 @@
   "dependencies": {
     "@dotenvx/dotenvx": "^1.75.1",
     "@fastify/autoload": "^6.3.1",
-    "@fastify/swagger": "^9.7.0",
-    "@scalar/fastify-api-reference": "^1.61.0",
     "detect-port": "^2.1.0",
     "fastify": "^5.8.5",
     "fastify-plugin": "^6.0.0",
