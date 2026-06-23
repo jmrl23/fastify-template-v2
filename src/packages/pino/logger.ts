@@ -57,6 +57,8 @@ const options: Record<string, LoggerOptions> = {
   },
 };
 
-const NODE_ENV = process.env.NODE_ENV || 'development';
-
-export const logger = pino(options[NODE_ENV]);
+export const loggers = {
+  development: pino(options.development),
+  production: pino(options.production),
+  test: pino(options.test),
+};

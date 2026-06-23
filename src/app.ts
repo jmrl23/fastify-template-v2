@@ -1,9 +1,11 @@
 import fastify from 'fastify';
 import { HttpError, NotFound } from 'http-errors';
-import { logger } from './packages/pino/logger';
+import { loggers } from './packages/pino/logger';
+import { env } from './packages/zod/env';
 
 export const app = fastify({
-  loggerInstance: logger,
+  loggerInstance: loggers[env('NODE_ENV')],
+  trustProxy: env('TRUST_PROXY'),
   routerOptions: {
     ignoreTrailingSlash: true,
   },
