@@ -38,6 +38,7 @@
   "dependencies": {
     "@dotenvx/dotenvx": "^1.75.1",
     "@fastify/autoload": "^6.3.1",
+    "@fastify/cors": "^11.2.0",
     "detect-port": "^2.1.0",
     "fastify": "^5.8.5",
     "fastify-plugin": "^6.0.0",

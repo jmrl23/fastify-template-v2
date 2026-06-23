@@ -12,4 +12,10 @@ export const variables = z.object({
     .transform((str) => str?.split(',')?.map((item) => item.trim()))
     .pipe(z.array(z.string()))
     .default(['loopback']),
+  CORS_ORIGIN: z
+    .string()
+    .min(1)
+    .optional()
+    .transform((str) => str?.split(',')?.map((item) => item.trim()))
+    .pipe(z.array(z.string()).optional()),
 });
