@@ -4,5 +4,11 @@
   "compilerOptions": {
     "rootDir": "."
   },
-  "include": ["src", "eslint.config.ts", "*.config.ts", "*.config.js"]
+  "include": [
+    "src",
+    "eslint.config.ts",
+    "*.config.ts",
+    "jest.global-setup.ts",
+    "jest.global-teardown.ts"
+  ]
 }

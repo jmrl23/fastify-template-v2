@@ -1,5 +1,6 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import jest from 'eslint-plugin-jest';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -25,6 +26,10 @@ export default defineConfig([
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/require-await': 'off',
     },
+  },
+  {
+    files: ['**/*.{test,spec}.ts'],
+    ...jest.configs['flat/recommended'],
   },
   eslintConfigPrettier,
 ]);
