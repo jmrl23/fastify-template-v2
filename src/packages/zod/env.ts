@@ -1,5 +1,5 @@
 import z from 'zod';
-import { variables } from '../../configurations/env';
+import { variables } from '../../configs/env';
 
 type Env = z.infer<typeof variables>;
 export function env<K extends keyof Env>(key: K): Env[K] | never {
