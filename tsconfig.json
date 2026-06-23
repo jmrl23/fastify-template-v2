@@ -1,0 +1,9 @@
+{
+  "$schema": "https://www.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "strict": true,
+    "types": ["node"],
+    "rootDir": "./src"
+  },
+  "extends": "@tsconfig/bases/node-lts"
+}
