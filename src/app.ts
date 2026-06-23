@@ -4,7 +4,7 @@ import { loggers } from './packages/pino/logger';
 import { env } from './packages/zod/env';
 
 export const app = fastify({
-  loggerInstance: loggers[env('NODE_ENV')],
+  loggerInstance: loggers[env('NODE_ENV')](),
   trustProxy: env('TRUST_PROXY'),
   routerOptions: {
     ignoreTrailingSlash: true,

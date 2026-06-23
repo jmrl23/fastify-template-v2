@@ -58,7 +58,7 @@ const options: Record<string, LoggerOptions> = {
 };
 
 export const loggers = {
-  development: pino(options.development),
-  production: pino(options.production),
-  test: pino(options.test),
+  development: () => pino(options.development),
+  production: () => pino(options.production),
+  test: () => pino(options.test),
 };
