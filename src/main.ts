@@ -15,6 +15,14 @@ async function main() {
 
   await app.register(bootstrap);
 
+  const closeGracefully = async (signal: NodeJS.Signals) => {
+    app.log.info(`Received ${signal}, shutting down`);
+    await app.close();
+    process.exit(0);
+  };
+  process.on('SIGTERM', () => void closeGracefully('SIGTERM'));
+  process.on('SIGINT', () => void closeGracefully('SIGINT'));
+
   app.listen(
     {
       host,
