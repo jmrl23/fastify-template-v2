@@ -3,5 +3,6 @@ build
 coverage
 docs/superpowers
 .superpowers
+graphify-out
 venv
 .env*local

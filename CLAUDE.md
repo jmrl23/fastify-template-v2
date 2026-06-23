@@ -31,3 +31,7 @@ yarn format              # Prettier write
 ## Don'ts
 
 - Don't edit `build/`/`coverage/` (generated) or read/commit `.env*`. Don't add a database/ORM or frontend unasked — this is an in-memory API template.
+
+## graphify
+
+- Knowledge graph at `graphify-out/` (built via `venv/bin/graphify`). For architecture/relationship questions prefer `graphify query "<q>"` / `path "<A>" "<B>"` / `explain "<x>"` over raw grep. Run `graphify update .` after code changes (AST-only, no API cost).
