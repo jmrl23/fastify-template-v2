@@ -3,4 +3,5 @@ build
 coverage
 docs/superpowers
 .superpowers
+venv
 .env*local
