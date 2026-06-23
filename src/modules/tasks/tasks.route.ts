@@ -13,7 +13,6 @@ import {
   UpdateTaskParams,
   updateTaskParamsSchema,
 } from './tasks.dto';
-import fastifyPlugin from 'fastify-plugin';
 
 // export const autoConfig = {
 //   prefix: '/app',

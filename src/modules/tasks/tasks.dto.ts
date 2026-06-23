@@ -1,4 +1,3 @@
-import { create } from 'node:domain';
 import z from 'zod';
 
 export const task = z.object({
