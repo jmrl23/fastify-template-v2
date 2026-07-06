@@ -4,7 +4,12 @@
   "compilerOptions": {
     "strict": true,
     "types": ["node"],
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "paths": {
+      "@scalar/fastify-api-reference": [
+        "./src/types/scalar-fastify-api-reference.d.ts"
+      ]
+    }
   },
   "include": ["src"]
 }
